@@ -1,4 +1,3 @@
-
 # from fastapi import FastAPI
 # from pydantic import BaseModel
 # import numpy as np
@@ -70,17 +69,6 @@
 
 #     except Exception as e:
 #         return {"error": str(e)}
-
-
-
-
-
-
-
-
-
-
-
 
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
