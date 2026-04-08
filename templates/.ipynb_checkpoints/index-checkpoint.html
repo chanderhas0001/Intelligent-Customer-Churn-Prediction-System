@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Churn Prediction</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f0f2f5;
+            text-align: center;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            margin: 30px auto;
+            width: 400px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px gray;
+        }
+
+        input, select {
+            width: 90%;
+            padding: 8px;
+            margin: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 22px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Customer Churn Prediction</h2>
+
+    <form id="form">
+
+        <input type="number" name="account_length" placeholder="Account Length" required>
+
+        <select name="international_plan" required>
+            <option value="">International Plan</option>
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select>
+
+        <select name="voice_mail_plan" required>
+            <option value="">Voice Mail Plan</option>
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select>
+
+        <input type="number" name="number_vmail_messages" placeholder="VMail Messages" required>
+
+        <input type="number" step="any" name="total_day_minutes" placeholder="Day Minutes" required>
+        <input type="number" name="total_day_calls" placeholder="Day Calls" required>
+        <input type="number" step="any" name="total_day_charge" placeholder="Day Charge" required>
+
+        <input type="number" step="any" name="total_eve_minutes" placeholder="Evening Minutes" required>
+        <input type="number" name="total_eve_calls" placeholder="Evening Calls" required>
+        <input type="number" step="any" name="total_eve_charge" placeholder="Evening Charge" required>
+
+        <input type="number" step="any" name="total_night_minutes" placeholder="Night Minutes" required>
+        <input type="number" name="total_night_calls" placeholder="Night Calls" required>
+        <input type="number" step="any" name="total_night_charge" placeholder="Night Charge" required>
+
+        <input type="number" step="any" name="total_intl_minutes" placeholder="Intl Minutes" required>
+        <input type="number" name="total_intl_calls" placeholder="Intl Calls" required>
+        <input type="number" step="any" name="total_intl_charge" placeholder="Intl Charge" required>
+
+        <input type="number" name="number_customer_service_calls" placeholder="Customer Service Calls" required>
+
+        <br><br>
+        <button type="submit">Predict</button>
+
+    </form>
+
+    <div id="result"></div>
+</div>
+
+<script>
+document.getElementById("form").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    document.getElementById("result").innerHTML = "⏳ Predicting...";
+
+    const formData = new FormData(e.target);
+    let data = {};
+
+    formData.forEach((value, key) => {
+        data[key] = Number(value);
+    });
+
+    const response = await fetch("/predict", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+
+    if (result.prediction === 1) {
+        document.getElementById("result").style.color = "red";
+        document.getElementById("result").innerHTML = "⚠️ Churn is Positive";
+    } else {
+        document.getElementById("result").style.color = "green";
+        document.getElementById("result").innerHTML = "✅ Churn is Negative";
+    }
+});
+</script>
+
+</body>
+</html>
